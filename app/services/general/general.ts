@@ -7,6 +7,7 @@
 import {ITours} from "../../models/tours";
 import {getTourTemplate} from "../../templates/tours";
 import {openModal} from "@services/modal/modalService";
+import {initTicketElementTemplate} from "../../templates/ticketInfo";
 
 export function initHeaderTitle(ticketName:string, selector:string):void {
     const headerElement= document.querySelector('header');
@@ -24,7 +25,7 @@ export function initFooterTitle(ticketName:string, selector:string):void {
     }
 }
 
-export function initToursDivElements(data:ITours[]) {
+export function initToursDivElements(data:ITours[]):void {
 
     if (Array.isArray(data)) {
         const rootElement = document.querySelector('.main-app');
@@ -46,7 +47,7 @@ export function initToursDivElements(data:ITours[]) {
 }
 
 
-export function initTourElemListener(tourWrap) {
+export function initTourElemListener(tourWrap):void {
     tourWrap.addEventListener('click', (ev) => {
         const targetItem = ev.target;
         const parentItem = targetItem?.parentNode;
@@ -63,4 +64,25 @@ export function initTourElemListener(tourWrap) {
             openModal('order', Number(dataIndex));
         }
     });
+}
+
+export function initTicketSellDivElements(data:ITours[],index:number):void {
+
+    if (data) {
+        const rootElement = document.querySelector('.main-app');
+        const tourWrap = document.createElement('div');
+
+        tourWrap.classList.add('ticket-info');
+
+        // init click for modal
+        initTourElemListener(tourWrap);
+
+        let rootElementData = getTourTemplate(data[index],index);
+        // data.forEach((el, i) => {
+        //     rootElementData += initTicketElementTemplate(el, i);
+        // });
+
+        tourWrap.innerHTML = rootElementData;
+        rootElement.appendChild(tourWrap) ;
+    }
 }

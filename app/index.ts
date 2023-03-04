@@ -4,15 +4,22 @@ import {images} from "@services/img/img";
 import {ITours} from "./models/tours";
 import {getTourTemplate} from "./templates/tours";
 import {openModal} from "@services/modal/modalService";
-import {initFooterTitle, initHeaderTitle, initToursDivElements} from "@services/general/general";
+import {
+  initFooterTitle,
+  initHeaderTitle,
+  initTicketSellDivElements,
+  initToursDivElements
+} from "@services/general/general";
 
 export let  toursDataArray: ITours[] = [];
 const imagesStore = images; // ссылка на изображения нужна чтобы webpack формировал изображения в папке dist
 
+const isPathTicket:boolean = window.location.pathname=="/ticket.html"
 
-
-initHeaderTitle('Туры', 'h1');
-initFooterTitle('Туры по всему миру', 'h2');
+if(!isPathTicket) {
+  initHeaderTitle('Туры', 'h1');
+  initFooterTitle('Туры по всему миру', 'h2');
+}
 // init data
 const tourData: Promise<ITours[]> = getTours();
 
@@ -31,7 +38,16 @@ tourData.then((data): void => {
 */
 
 export function initApp(data:ITours[]):void{
-  initToursDivElements(data);
+
+  if(!isPathTicket) {
+    initToursDivElements(data);
+  }
+  else {
+    const params = new URL(location.href).searchParams;
+    const tourId = +params.get('tourId');
+    console.log(tourId)
+    initTicketSellDivElements(data, tourId);
+  }
 }
 
 
